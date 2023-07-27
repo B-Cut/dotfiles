@@ -16,6 +16,7 @@ in
 	
 	#Hotkey configs
 	services.sxhkd = {
+	    enable = true;
 	    keybindings = {
 	    	"super + Return" = "wezterm";
 		"super + w" = "firefox";
@@ -36,7 +37,7 @@ in
 		"alt + tab" = "bspc node -f last";
 		#Focus or send to desktop
 		"super + {_,shift + }{1-5}" = "bspc {desktop -f,node -d} {1-5}";
-		};
+   	   };
 	};
         
         #Here we configure git
@@ -48,16 +49,16 @@ in
 	#Picom config here
 	services.picom = {
 	    enable = true;
-            backend = "glx";
+            #backend = "glx";
 	    inactiveOpacity = 0.8;
 	    activeOpacity = 0.85;
  	    settings ={
 	    	round-borders = 1;
-		blur = {
-		    method = "dual_kawase";
-		    size = 5;
-		    deviation = 5.0;
-		};
+		#blur = {
+		#    method = "dual_kawase";
+		#    size = 5;
+		#    deviation = 5.0;
+		#};
 	    };
 	};
 	#Bspwm config
