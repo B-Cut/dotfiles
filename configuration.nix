@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   imports =
@@ -59,8 +59,10 @@
   #hardware.opengl.driSupport32Bit = true;  
   #boot.blacklistedKernelModules = [ "noveau" ];
   #Uncomment when switching to actual pc
+  services.spice-vdagentd.enable = lib.mkOverride 0 true;
   services.xserver.videoDrivers = [ "qx1" ];
-  # Define a user account. Don't forget to set a password with ‘passwd’.
+  services.xserver.resolutions = lib.mkOverride 9 { x = 1920; y = 1080; }; 
+ # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.nyx = {
     isNormalUser = true;
     description = "Nyx";
