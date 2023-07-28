@@ -4,6 +4,7 @@ let
 	url = "https://github.com/nix-community/home-manager/archive/release-23.05.tar.gz";
 	
     };
+    gap = "5";
 in
 {
     imports = [
@@ -52,8 +53,9 @@ in
             #backend = "glx";
 	    inactiveOpacity = 0.8;
 	    activeOpacity = 0.85;
- 	    settings ={
-	    	round-borders = 1;
+ 	    extraArgs = [ "--experimental-backends" ];
+	    settings ={
+	    	corner-radius = 5;
 		#blur = {
 		#    method = "dual_kawase";
 		#    size = 5;
@@ -66,8 +68,16 @@ in
 	    enable = true;
 	    monitors = {
 		#Check xrandr to get the monitor name on a real machine
-	    	Virtual-1 = [ "I" "II" "III" "IV" "V"];
+	    	Virtual-1 = [ "1" "2" "3" "4" "5"];
 	    };
+	    extraConfig = "
+		bspc config window_gap ${gap}
+		#TODO get variable that automatically gets system height
+		bspc config top_padding ${gap}
+		bspc config left_padding ${gap}
+		bspc config right_padding ${gap}
+		bspc config bottom_padding ${gap}	
+	    ";
 	};
     };
 }
