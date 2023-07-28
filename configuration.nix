@@ -9,14 +9,13 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./home.nix
+      ./vscode.nix
     ];
 
   # Bootloader.
   boot.loader.grub.enable = true;
   boot.loader.grub.device = "/dev/vda";
   boot.loader.grub.useOSProber = true;
-
-  
 
   networking.hostName = "nyx"; 
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -68,11 +67,12 @@
     description = "Nyx";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
-         rustc
-         cargo
-         neovim
-         lua
-         python3
+      rustc
+      cargo
+      neovim
+	    vscode
+      lua
+	    ripgrep
     ];
   };
   # Allow unfree packages
@@ -96,7 +96,15 @@
     feh
     rofi
     gcc
-    
+    python3
+    python311Packages.nix-prefetch-github    
+  ];
+
+  #Adding vscode support
+  vscode.user = "nyx";
+  vscode.homeDir = "/home/nyx";
+  vscode.extensions = with pkgs.vscode-extensions; [
+    bbenoist.nix
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

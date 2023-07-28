@@ -1,83 +1,83 @@
 { config, pkgs, ... }:
+
 let
-    home-manager = builtins.fetchTarball {
-	url = "https://github.com/nix-community/home-manager/archive/release-23.05.tar.gz";
-	
-    };
-    gap = "5";
+  home-manager = builtins.fetchTarball {
+		url = "https://github.com/nix-community/home-manager/archive/release-23.05.tar.gz";	
+  };
+  gap = "5";
 in
 {
-    imports = [
-	(import "${home-manager}/nixos")
-    ];
+  imports = [
+		(import "${home-manager}/nixos")
+  ];
 
-    home-manager.users.nyx = {
-	#This should be the same number as system.stateVersion in configuration.nix
-	home.stateVersion = "23.05";
+  home-manager.users.nyx = {
+		#This should be the same number as system.stateVersion in configuration.nix
+		home.stateVersion = "23.05";
 	
-	#Hotkey configs
-	services.sxhkd = {
-	    enable = true;
-	    keybindings = {
+		#Hotkey configs
+		services.sxhkd = {
+			enable = true;
+	  	keybindings = {
 	    	"super + Return" = "wezterm";
-		"super + w" = "firefox";
-		"super + f" = "wezterm -e ranger"; 
-		#Reset sxhkd
-		"super + Escape" = "pkill -USR1 -x sxhkd";
-		#Close/Kill program
-		"super + {_, shift +}q" = "bspc node -{c,k}";
-		#Switch between tiled and monocle
-		"super + m" = "bspc desktop -l next";
-		#Switch biggest node with current one"
-		"super + g" = "bspc node -s biggest.local";
-		#Set window state
-		"super + {t,shift + t,s,f}" = "bspc node -t {tiled,pseudo_tiled,floating,fullscreen}";
-		#Change focus
-		"super + {Left,Down,Up,Right}" = "bspc node -f {west,south,north,east}";
+				"super + w" = "firefox";
+				"super + f" = "wezterm -e ranger"; 
+				#Reset sxhkd
+				"super + Escape" = "pkill -USR1 -x sxhkd";
+				#Close/Kill program
+				"super + {_, shift +}q" = "bspc node -{c,k}";
+				#Switch between tiled and monocle
+				"super + m" = "bspc desktop -l next";
+				#Switch biggest node with current one"
+				"super + g" = "bspc node -s biggest.local";
+				#Set window state
+				"super + {t,shift + t,s,f}" = "bspc node -t {tiled,pseudo_tiled,floating,fullscreen}";
+				#Change focus
+				"super + {Left,Down,Up,Right}" = "bspc node -f {west,south,north,east}";
 	    	#Focus last node
-		"alt + tab" = "bspc node -f last";
-		#Focus or send to desktop
-		"super + {_,shift + }{1-5}" = "bspc {desktop -f,node -d} {1-5}";
-   	   };
-	};
+				"alt + tab" = "bspc node -f last";
+				#Focus or send to desktop
+				"super + {_,shift + }{1-5}" = "bspc {desktop -f,node -d} {1-5}";
+   		};
+		};
         
-        #Here we configure git
-        programs.git = {
-            enable = true;
-            userName = "B-Cut";    
-            userEmail = "cgoncalves@id.uff.br";
-        };
-	#Picom config here
-	services.picom = {
-	    enable = true;
-            #backend = "glx";
+    #Here we configure git
+      programs.git = {
+          enable = true;
+          userName = "B-Cut";    
+          userEmail = "cgoncalves@id.uff.br";
+      };
+		#Picom config here
+		services.picom = {
+	  	enable = true;
+      #backend = "glx";
 	    inactiveOpacity = 0.8;
 	    activeOpacity = 0.85;
- 	    extraArgs = [ "--experimental-backends" ];
+ 	    #extraArgs = [ "--experimental-backends" ];
 	    settings ={
-	    	corner-radius = 5;
-		#blur = {
-		#    method = "dual_kawase";
-		#    size = 5;
-		#    deviation = 5.0;
-		#};
+	    	corner-radius = 25.0;
+				#blur = {
+			#    method = "dual_kawase";
+			#    size = 5;
+			#    deviation = 5.0;
+				#};
 	    };
-	};
-	#Bspwm config
-	xsession.windowManager.bspwm = {
-	    enable = true;
-	    monitors = {
-		#Check xrandr to get the monitor name on a real machine
-	    	Virtual-1 = [ "1" "2" "3" "4" "5"];
-	    };
-	    extraConfig = "
-		bspc config window_gap ${gap}
-		#TODO get variable that automatically gets system height
-		bspc config top_padding ${gap}
-		bspc config left_padding ${gap}
-		bspc config right_padding ${gap}
-		bspc config bottom_padding ${gap}	
-	    ";
-	};
-    };
+		};
+		#Bspwm config
+		xsession.windowManager.bspwm = {
+	  	  enable = true;
+	    	monitors = {
+			#Check xrandr to get the monitor name on a real machine
+	    		Virtual-1 = [ "1" "2" "3" "4" "5"];
+	    	};
+	    	extraConfig = "
+					bspc config window_gap ${gap}
+					#TODO get variable that automatically gets system height
+					bspc config top_padding ${gap}
+					bspc config left_padding ${gap}
+					bspc config right_padding ${gap}
+					bspc config bottom_padding ${gap}	
+	    	";
+		};
+  };
 }
