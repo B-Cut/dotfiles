@@ -48,10 +48,29 @@
     xkbVariant = "altgr-intl";
   };
 
-  #X server configurations
+  nix.settings.experimental-features = [ "flakes" "nix-command" ];
+
+  #X server configurations and DE/WM
   services.xserver.enable = true;
-  services.xserver.displayManager.lightdm.enable = true;
-  services.xserver.windowManager.bspwm.enable = true;
+  services.xserver.displayManager.gdm.enable = true;
+  services.xserver.desktopManager.gnome.enable = true;
+
+  environment.gnome.excludePackages = (with pkgs; [
+    gnome-photos
+    gnome-tour
+  ]) ++ (with pkgs.gnome; [
+    cheese
+    gnome-music
+    gnome-terminal
+    epiphany
+    geary
+    evince
+    totem
+    tali
+    iagno
+    hitori
+    atomix
+  ]);
 
   #Video stuff
   #services.xserver.videoDrivers = [ "nvidia" ];
@@ -73,6 +92,18 @@
 	    vscode
       lua
 	    ripgrep
+      nodejs
+      nodePackages.npm
+      #Gnome stuff
+      gnome.gnome-tweaks
+      gnome.dconf-editor
+      #Extensions
+      gnomeExtensions.appindicator
+      gnomeExtensions.gsconnect
+      gnomeExtensions.sound-output-device-chooser
+      gnomeExtensions.blur-my-shell
+      #Theming
+      gradience
     ];
   };
   # Allow unfree packages
@@ -88,17 +119,16 @@
     vim
     wget
     curl
-    firefox
+    firefox-bin
     git     
     appimage-run
     wezterm
-    ranger
-    feh
-    rofi
     gcc
     python3
-    python311Packages.nix-prefetch-github    
+    python311Packages.nix-prefetch-github 
   ];
+
+  services.udev.packages = with pkgs; [ gnome.gnome-settings-daemon ];
 
   #Adding vscode support
   vscode.user = "nyx";
@@ -106,25 +136,6 @@
   vscode.extensions = with pkgs.vscode-extensions; [
     bbenoist.nix
   ];
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
