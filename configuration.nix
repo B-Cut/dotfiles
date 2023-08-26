@@ -9,7 +9,6 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./home.nix
-      ./vscode.nix
     ];
 
   # Bootloader.
@@ -80,30 +79,71 @@
   services.spice-vdagentd.enable = lib.mkOverride 0 true;
   services.xserver.videoDrivers = [ "qx1" ];
   services.xserver.resolutions = lib.mkOverride 9 { x = 1920; y = 1080; }; 
- # Define a user account. Don't forget to set a password with ‘passwd’.
+
+  #Printer stuff
+  services.printing.enable = true;
+  services.printing.drivers = [ pkgs.epson_201207w ];
+  services.avahi.enable = true;
+  services.avahi.nssmdns = true;
+  # for a WiFi printer
+  services.avahi.openFirewall = true;
+
+  #Bluetooth
+  hardware.bluetooth.enable = true;
+
+  #Audio
+  security.rtkit.enable = true;
+  hardware.pulseaudio.enable = false;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    jack.enable = true;
+};
+
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  #Also, my packages go here, need to consider putting those on home
   users.users.nyx = {
     isNormalUser = true;
     description = "Nyx";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
+      #dev stuff
       rustc
       cargo
-      neovim
-	    vscode
+	    vscode.fhs
       lua
 	    ripgrep
       nodejs
       nodePackages.npm
+      wineWowPackages.stable
+      winetricks
+      #Mongo crashes the vm, install on actual pc
+      #mongodb
+      #mongosh
+      #mongodb-compass
+      #Communication
+      discord
+      telegram-desktop
       #Gnome stuff
       gnome.gnome-tweaks
       gnome.dconf-editor
-      #Extensions
+      #Gnome Extensions
       gnomeExtensions.appindicator
       gnomeExtensions.gsconnect
       gnomeExtensions.sound-output-device-chooser
       gnomeExtensions.blur-my-shell
+      gnomeExtensions.media-controls
+      gnomeExtensions.forge
       #Theming
       gradience
+      #Games
+      yabause
+      snes9x
+      rpcs3
+      pcsx2
+      steam
     ];
   };
   # Allow unfree packages
@@ -129,13 +169,6 @@
   ];
 
   services.udev.packages = with pkgs; [ gnome.gnome-settings-daemon ];
-
-  #Adding vscode support
-  vscode.user = "nyx";
-  vscode.homeDir = "/home/nyx";
-  vscode.extensions = with pkgs.vscode-extensions; [
-    bbenoist.nix
-  ];
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
