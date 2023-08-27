@@ -12,13 +12,21 @@
     ];
 
   # Bootloader.
-  boot.loader.grub.enable = true;
-  boot.loader.grub.device = "/dev/vda";
-  boot.loader.grub.useOSProber = true;
+  boot.loader = {
+    efi = {
+         canTouchEfiVariables = true;
+         efiSysMountPoint = "/boot";
+    };
+    grub = {
+         devices = [ "nodev" ];
+         efiSupport = true;
+         enable = true;
+         version = 2;
+    };
+  };
 
-  networking.hostName = "nyx"; 
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  # ATM i'm in a vm, no need for this	
+
+  networking.hostName = "nyx";  	
   
   # Enable networking
   networking.networkmanager.enable = true;
@@ -72,14 +80,10 @@
   ]);
 
   #Video stuff
-  #services.xserver.videoDrivers = [ "nvidia" ];
-  #hardware.opengl.driSupport32Bit = true;  
-  #boot.blacklistedKernelModules = [ "noveau" ];
-  #Uncomment when switching to actual pc
-  services.spice-vdagentd.enable = lib.mkOverride 0 true;
-  services.xserver.videoDrivers = [ "qx1" ];
-  services.xserver.resolutions = lib.mkOverride 9 { x = 1920; y = 1080; }; 
-
+  services.xserver.videoDrivers = [ "nvidia" ];
+  hardware.opengl.driSupport32Bit = true;  
+  boot.blacklistedKernelModules = [ "noveau" ];
+  
   #Printer stuff
   services.printing.enable = true;
   services.printing.drivers = [ pkgs.epson_201207w ];
@@ -119,10 +123,7 @@
       nodePackages.npm
       wineWowPackages.stable
       winetricks
-      #Mongo crashes the vm, install on actual pc
-      #mongodb
-      #mongosh
-      #mongodb-compass
+      mongodb-compass
       #Communication
       discord
       telegram-desktop
