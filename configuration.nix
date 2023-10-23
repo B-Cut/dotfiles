@@ -20,8 +20,8 @@
     grub = {
          devices = [ "nodev" ];
          efiSupport = true;
+         useOSProber = true;
          enable = true;
-         version = 2;
     };
   };
 
@@ -104,26 +104,49 @@
     alsa.support32Bit = true;
     pulse.enable = true;
     jack.enable = true;
-};
+  };
 
+  #Shell
+  programs.zsh.enable = true;
   # Define a user account. Don't forget to set a password with ‘passwd’.
   #Also, my packages go here, need to consider putting those on home
+  programs.adb.enable = true;
   users.users.nyx = {
     isNormalUser = true;
     description = "Nyx";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "adbusers" "vboxusers" ];
+    shell = pkgs.zsh;
     packages = with pkgs; [
       #dev stuff
+      android-studio
+      android-tools
+      apktool
+      jadx
+      openjdk
+      ghidra
+      genymotion
+      qemu
+      jd-gui
       rustc
       cargo
-	    vscode.fhs
+      vscode.fhs
       lua
-	    ripgrep
+      ripgrep
       nodejs
       nodePackages.npm
       wineWowPackages.stable
       winetricks
       mongodb-compass
+      direnv
+      #Productivity
+      obsidian
+      epson_201207w
+      #Graphics
+      gimp
+      blender
+      #Audio
+      spotify
+      spicetify-cli
       #Communication
       discord
       telegram-desktop
@@ -137,8 +160,11 @@
       gnomeExtensions.blur-my-shell
       gnomeExtensions.media-controls
       gnomeExtensions.forge
+      gnomeExtensions.rounded-window-corners
       #Theming
       gradience
+      rose-pine-gtk-theme
+      rose-pine-icon-theme
       #Games
       yabause
       snes9x
@@ -152,6 +178,10 @@
 
   # Enable virtualization for vms
   virtualisation.libvirtd.enable = true;
+  virtualisation.virtualbox.host.enable = true;
+  virtualisation.virtualbox.host.enableExtensionPack = true;
+  virtualisation.virtualbox.guest.enable = true;
+  users.extraGroups.vboxusers.members = [ "nyx" ];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -165,9 +195,13 @@
     appimage-run
     wezterm
     gcc
+    file
     python3
     python311Packages.nix-prefetch-github 
+    ntfs3g
   ];
+  #PATH
+  environment.localBinInPath = true;
 
   services.udev.packages = with pkgs; [ gnome.gnome-settings-daemon ];
 
